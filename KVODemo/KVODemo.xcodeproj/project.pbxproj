@@ -14,12 +14,9 @@
 		FA09529A25515199006814FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA09529925515199006814FA /* Assets.xcassets */; };
 		FA09529D25515199006814FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA09529B25515199006814FA /* LaunchScreen.storyboard */; };
 		FA0952A025515199006814FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FA09529F25515199006814FA /* main.m */; };
-		FA0952AB255151AE006814FA /* MRCEasyKVOTools.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0952A7255151AE006814FA /* MRCEasyKVOTools.m */; };
 		FA0952AC255151AE006814FA /* NSObject+EasyKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0952A9255151AE006814FA /* NSObject+EasyKVO.m */; };
 		FA0952B325515962006814FA /* BBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0952B225515962006814FA /* BBViewController.m */; };
 		FA0952CC255400DF006814FA /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0952CB255400DE006814FA /* Person.m */; };
-		FA0952D125540A07006814FA /* EasyKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0952D025540A06006814FA /* EasyKVO.m */; };
-		FA0952D625550109006814FA /* NSString+kvo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0952D525550108006814FA /* NSString+kvo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,18 +32,12 @@
 		FA09529C25515199006814FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA09529E25515199006814FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA09529F25515199006814FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		FA0952A7255151AE006814FA /* MRCEasyKVOTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRCEasyKVOTools.m; sourceTree = "<group>"; };
 		FA0952A8255151AE006814FA /* NSObject+EasyKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+EasyKVO.h"; sourceTree = "<group>"; };
 		FA0952A9255151AE006814FA /* NSObject+EasyKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+EasyKVO.m"; sourceTree = "<group>"; };
-		FA0952AA255151AE006814FA /* MRCEasyKVOTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRCEasyKVOTools.h; sourceTree = "<group>"; };
 		FA0952B125515962006814FA /* BBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BBViewController.h; sourceTree = "<group>"; };
 		FA0952B225515962006814FA /* BBViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BBViewController.m; sourceTree = "<group>"; };
 		FA0952CA255400DE006814FA /* Person.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		FA0952CB255400DE006814FA /* Person.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
-		FA0952CF25540A06006814FA /* EasyKVO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EasyKVO.h; sourceTree = "<group>"; };
-		FA0952D025540A06006814FA /* EasyKVO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EasyKVO.m; sourceTree = "<group>"; };
-		FA0952D425550108006814FA /* NSString+kvo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+kvo.h"; sourceTree = "<group>"; };
-		FA0952D525550108006814FA /* NSString+kvo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+kvo.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,14 +93,8 @@
 		FA0952AE255151CC006814FA /* kvo */ = {
 			isa = PBXGroup;
 			children = (
-				FA0952AA255151AE006814FA /* MRCEasyKVOTools.h */,
-				FA0952A7255151AE006814FA /* MRCEasyKVOTools.m */,
 				FA0952A8255151AE006814FA /* NSObject+EasyKVO.h */,
 				FA0952A9255151AE006814FA /* NSObject+EasyKVO.m */,
-				FA0952CF25540A06006814FA /* EasyKVO.h */,
-				FA0952D025540A06006814FA /* EasyKVO.m */,
-				FA0952D425550108006814FA /* NSString+kvo.h */,
-				FA0952D525550108006814FA /* NSString+kvo.m */,
 			);
 			path = kvo;
 			sourceTree = "<group>";
@@ -186,10 +171,7 @@
 			files = (
 				FA0952CC255400DF006814FA /* Person.m in Sources */,
 				FA0952B325515962006814FA /* BBViewController.m in Sources */,
-				FA0952D625550109006814FA /* NSString+kvo.m in Sources */,
 				FA09529525515196006814FA /* ViewController.m in Sources */,
-				FA0952D125540A07006814FA /* EasyKVO.m in Sources */,
-				FA0952AB255151AE006814FA /* MRCEasyKVOTools.m in Sources */,
 				FA0952AC255151AE006814FA /* NSObject+EasyKVO.m in Sources */,
 				FA09528F25515196006814FA /* AppDelegate.m in Sources */,
 				FA0952A025515199006814FA /* main.m in Sources */,
