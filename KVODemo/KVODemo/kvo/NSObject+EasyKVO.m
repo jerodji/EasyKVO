@@ -3,7 +3,7 @@
 //  AI-Practice
 //
 //  Created by Jerod on 2020/8/13.
-//  Copyright © 2020 vipPelian. All rights reserved.
+//  Copyright © 2020 JIJIUDONG. All rights reserved.
 //
 
 #import "NSObject+EasyKVO.h"
@@ -18,12 +18,10 @@ static NSString * const EASY_KVO_MAP = @"EasyKVOTipsMap";
 static NSString * const EASY_KVO_OBSERVED_OBJECTS = @"EasyKVOObservedObjects";
 
 void __easy_dealloc(id self);
-//void __observed_dealloc(void);
 
 void easy_setter(id self, SEL _cmd, id newValue);
 Class easy_class(id self, SEL _cmd);
 void easy_dealloc(id self, SEL _cmd);
-//void observed_dealloc(id self, SEL _cmd);
 
 BOOL _containSelector(NSObject *objc, NSString *selector);
 NSString* _setterForProperty(NSString *keyPath);
@@ -33,45 +31,9 @@ NSMutableArray *_globalObservedObjects(void);
 
 
 
+#pragma mark-
 
-//- (void)observe:(NSObject*)observedObjc forKeyPath:(NSString*)keyPath changedBlock:(void(^)(id newValue, id oldValue))block {
-//
-//    if (!observedObjc || ![observedObjc isKindOfClass:[NSObject class]]) {
-//        NSLog(@"KVO 无效的被观察者");
-//        return;
-//    }
-//    if (keyPath.length < 1) {
-//        NSLog(@"KVO 无效的观察属性");
-//        return;
-//    }
-//
-//    NSMutableArray * observedList = _globalObservedObjects();
-//    if (self != observedObjc && ![observedList containsObject:self]) {
-//        /* 观察者销毁 */
-//        if (_containSelector(self, @"dealloc")) {
-//            static dispatch_once_t onceToken;
-//            dispatch_once(&onceToken, ^{
-//                Method m1 = class_getInstanceMethod([self class], NSSelectorFromString(@"dealloc"));
-//                Method m2 = class_getInstanceMethod([self class], @selector(selObservedDealloc));
-//                method_exchangeImplementations(m1, m2);
-//            });
-//        } else {
-//            SEL deallocSEL = NSSelectorFromString(@"dealloc");
-//            Method deallocMethod = class_getInstanceMethod([self class], deallocSEL);
-//            const char * deallocType = method_getTypeEncoding(deallocMethod);
-//            class_addMethod([self class], deallocSEL, (IMP)observed_dealloc, deallocType);
-//        }
-//
-//
-//        if (![observedList containsObject:observedObjc]) {
-//            [observedList addObject:observedObjc];
-//        }
-//    }
-//
-//    [observedObjc watchKeyPath:keyPath changedBlock:block];
-//}
-
-- (void)watchKeyPath:(NSString*)keyPath changedBlock:(void(^)(id newValue, id oldValue))block
+- (void)observeProperty:(NSString*)keyPath changedBlock:(void(^)(id newValue, id oldValue))block
 {
     if (keyPath.length < 1) {
         return;
@@ -136,27 +98,6 @@ NSMutableArray *_globalObservedObjects(void);
 }
 
 
-//- (void)removeObserverForProperty:(NSString*)keyPath
-//{
-//    NSString *oldClassName = NSStringFromClass([self class]);
-//    NSString *pairClassName = [EASY_KVO_PREFIX stringByAppendingString:oldClassName];
-//    Class pairClass = NSClassFromString(pairClassName);
-//    NSString * KEY = [NSString stringWithFormat:@"_%@_%@_block", NSStringFromClass(pairClass), keyPath];
-//
-//    NSMutableDictionary *tips = _globalTipsMap();
-//    if ([tips.allKeys containsObject:KEY]) {
-//        [tips removeObjectForKey:KEY];
-//    }
-//    NSLog(@"%@", tips);
-//}
-//
-//- (void)removeObserverForAllPropertys {
-//    NSMutableDictionary *tips = _globalTipsMap();
-//    [tips removeAllObjects];
-//    NSLog(@"%@", tips);
-//}
-
-
 #pragma mark -
 #pragma mark Easy IMP
 
@@ -196,10 +137,6 @@ void easy_dealloc(id self, SEL _cmd) {
     __easy_dealloc(self);
 }
 
-//void observed_dealloc(id self, SEL _cmd) {
-//    __observed_dealloc();
-//}
-
 #pragma mark- Functions
 
 void __easy_dealloc(id self) {
@@ -217,32 +154,15 @@ void __easy_dealloc(id self) {
         const char * name = ivar_getName(ivar);
         NSString * KEY = [NSString stringWithUTF8String:name];
         [self setValue:nil forKey:KEY];
-//        NSLog(@"prop %@ released", KEY);
+        //NSLog(@"prop %@ released", KEY);
     }
     
 }
-
-//void __observed_dealloc() {
-//    NSLog(@"*** observed_dealloc ");
-//    NSMutableDictionary *tips = _globalTipsMap();
-//    [tips removeAllObjects];
-//    NSMutableArray * observedList = _globalObservedObjects();
-//    for (NSObject *obj in observedList) {
-//        Class oldClass = [obj class];
-//        object_setClass(obj, oldClass); /* 改回 isa 指针 */
-//        [observedList removeObject:obj];
-//    }
-//}
 
 - (void)selEasyDealloc {
     __easy_dealloc(self);
     [self selEasyDealloc];
 }
-
-//- (void)selObservedDealloc {
-//    __observed_dealloc();
-//    [self selObservedDealloc];
-//}
 
 NSMutableDictionary *_globalTipsMap() {
     NSMutableDictionary * _tipsDic = objc_getAssociatedObject(EASY_KVO_MAP, &EASY_KVO_MAP);

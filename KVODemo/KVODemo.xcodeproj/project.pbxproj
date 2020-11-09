@@ -141,6 +141,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1210;
+				ORGANIZATIONNAME = JIJIUDONG;
 				TargetAttributes = {
 					FA09528925515196006814FA = {
 						CreatedOnToolsVersion = 12.1;
