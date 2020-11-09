@@ -17,7 +17,6 @@
 @property (nonatomic, copy) NSString *msg;
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic, strong) Person *person;
-@property (nonatomic, strong) NSMutableArray *arr;
 @end
 
 @implementation BBViewController
