@@ -7,11 +7,8 @@
 
 #import "BBViewController.h"
 #import "Person.h"
-
 #import "NSObject+EasyKVO.h"
-//#import "NSObject+XZKVO.h"
-#import "EasyKVO.h"
-#import "NSString+kvo.h"
+
 
 @interface BBViewController ()
 @property (nonatomic, copy) NSString *msg;
@@ -28,6 +25,13 @@
         NSLog(@"BB init");
     }
     return self;
+}
+
+- (void)dealloc
+{
+    NSLog(@">>> BBViewController dealloc");
+//    [self removeObserver:self forKeyPath:@"msg"];
+//    [self removeObserver:self forKeyPath:@"person.name"];
 }
 
 - (void)viewDidLoad {
@@ -73,11 +77,6 @@
     
 }
 
-- (void)dealloc
-{
-    NSLog(@">>> BBViewController dealloc");
-}
-
 - (void)clickAction:(UIButton*)sender {
     NSString *letter = [NSString stringWithFormat:@"%ld", self.msg.integerValue + 1];
     self.msg = letter;
@@ -87,7 +86,7 @@
 }
 
 //- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-//    
+//
 //    if ([keyPath isEqualToString:@"msg"]) {
 //        NSLog(@"msg 新值 : %@", self.msg);
 //    }
