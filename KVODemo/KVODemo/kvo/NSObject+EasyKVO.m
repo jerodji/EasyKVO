@@ -8,6 +8,8 @@
 
 #import "NSObject+EasyKVO.h"
 #import <objc/message.h>
+//#import <os/lock.h>
+#import <pthread/pthread.h>
 
 @implementation NSObject (EasyKVO)
 
@@ -45,6 +47,9 @@ NSMutableArray *_globalObservedObjects(void);
         return;
     }
     
+    pthread_mutex_t lock;
+    pthread_mutex_init(&lock, NULL);
+        
     NSString *oldClassName = NSStringFromClass([self class]);
     NSString *pairClassName = [EASY_KVO_PREFIX stringByAppendingString:oldClassName];
     Class pairClass = NSClassFromString(pairClassName);
@@ -95,6 +100,7 @@ NSMutableArray *_globalObservedObjects(void);
         [tips setObject:[^{} copy] forKey:KEY];
     }
     
+    pthread_mutex_unlock(&lock);
 }
 
 
