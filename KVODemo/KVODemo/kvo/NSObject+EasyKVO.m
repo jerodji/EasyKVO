@@ -11,7 +11,7 @@
 #import <pthread/pthread.h>
 
 @interface NSObject (EasyKVO)
-//@property (nonatomic, strong) NSMutableDictionary<> * globalTipsMap;
+
 @end
 
 
@@ -93,12 +93,12 @@ NSMutableArray *_globalObservedObjects(void);
     SEL setSel = NSSelectorFromString(_setterForProperty(keyPath));
     Method setMethod = class_getInstanceMethod([self class], setSel);
     const char * setType = method_getTypeEncoding(setMethod);
-    class_addMethod(pairClass, setSel, (IMP)easy_setter, setType); // ???: 如果setter方法已经存在
+    class_addMethod(pairClass, setSel, (IMP)easy_setter, setType);
     
     /* 修改 isa 指针指向 */
     object_setClass(self, pairClass);
     
-    /* 保存 block 信息, 用于执行回调 */ /// ???: 如何区分回调的唯一ID
+    /* 保存 block 信息, 用于执行回调 */
     NSString * KEY = [NSString stringWithFormat:@"_%@_%@_block", NSStringFromClass(pairClass), keyPath];
     NSMutableDictionary<NSString*, NSMutableArray*> *tips = _globalTipsMap();
     NSMutableArray* VAL = (NSMutableArray*)[tips objectForKey:KEY];
@@ -111,11 +111,6 @@ NSMutableArray *_globalObservedObjects(void);
         [VAL addObject:[^{} copy]];
     }
     [tips setObject:VAL forKey:KEY];
-//    if (block) {
-//        [tips setObject:[block copy] forKey:KEY];
-//    } else {
-//        [tips setObject:[^{} copy] forKey:KEY];
-//    }
     
     pthread_mutex_unlock(&lock);
 }
@@ -155,10 +150,6 @@ void easy_setter(id self, SEL _cmd, id newValue) {
         }
     }
     
-//    EasyKVOChangedBlock block = (EasyKVOChangedBlock)[tips objectForKey:KEY];
-//    if (block) {
-//        block(newValue, oldValue);
-//    }
 }
 
 Class easy_class(id self, SEL _cmd) {
