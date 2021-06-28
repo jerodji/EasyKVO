@@ -27,12 +27,12 @@
     return self;
 }
 
-- (void)dealloc
-{
-    NSLog(@">>> BBViewController dealloc");
-//    [self removeObserver:self forKeyPath:@"msg"];
-//    [self removeObserver:self forKeyPath:@"person.name"];
-}
+//- (void)dealloc
+//{
+//    NSLog(@">>> BBViewController dealloc");
+////    [self removeObserver:self forKeyPath:@"msg"];
+////    [self removeObserver:self forKeyPath:@"person.name"];
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -66,11 +66,11 @@
     [self.person observeProperty:@"name" changedBlock:^(id newValue, id oldValue) {
         NSLog(@" > person.name : 旧值 %@, 新值 %@", oldValue, newValue);
     }];
-    
+
     [self observeProperty:@"text" changedBlock:^(id newValue, id oldValue) {
         NSLog(@" > text : 旧值 %@, 新值 %@", oldValue, newValue);
     }];
-    
+
     [self.person observeProperty:@"nick" changedBlock:^(id newValue, id oldValue) {
         NSLog(@" > person.nick : 旧值 %@, 新值 %@", oldValue, newValue);
     }];

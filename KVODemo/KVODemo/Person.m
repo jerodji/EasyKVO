@@ -10,9 +10,9 @@
 
 @implementation Person
 
-- (void)dealloc
-{
-    NSLog(@">>> Person dealloc");
-}
+//- (void)dealloc
+//{
+//    NSLog(@">>> Person dealloc");
+//}
 
 @end

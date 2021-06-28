@@ -17,7 +17,7 @@ static NSString * const EASY_KVO_PREFIX = @"EasyKVONotifying_";
 static NSString * const EASY_KVO_MAP = @"EasyKVOTipsMap";
 static NSString * const EASY_KVO_OBSERVED_OBJECTS = @"EasyKVOObservedObjects";
 
-void __easy_dealloc(id self);
+void __easy_dealloc_TipsMap(id self);
 
 void easy_setter(id self, SEL _cmd, id newValue);
 Class easy_class(id self, SEL _cmd);
@@ -61,18 +61,18 @@ NSMutableArray *_globalObservedObjects(void);
         class_addMethod(pairClass, classSEL, (IMP)easy_class, classType);
         
         /* 被观察者自动销毁 */
-        if (!_containSelector(self, @"dealloc")) {
-            SEL deallocSEL = NSSelectorFromString(@"dealloc");
-            Method deallocMethod = class_getInstanceMethod([self class], deallocSEL);
-            const char * deallocType = method_getTypeEncoding(deallocMethod);
-            class_addMethod(pairClass, deallocSEL, (IMP)easy_dealloc, deallocType);
-        } else {
+        if (_containSelector(self, @"dealloc")) {
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
                 Method m1 = class_getInstanceMethod([self class], NSSelectorFromString(@"dealloc"));
                 Method m2 = class_getInstanceMethod([self class], @selector(selEasyDealloc));
                 method_exchangeImplementations(m1, m2);
             });
+        } else {
+            SEL deallocSEL = NSSelectorFromString(@"dealloc");
+            Method deallocMethod = class_getInstanceMethod([self class], deallocSEL);
+            const char * deallocType = method_getTypeEncoding(deallocMethod);
+            class_addMethod(pairClass, deallocSEL, (IMP)easy_dealloc, deallocType);
         }
         
     }
@@ -134,19 +134,9 @@ Class easy_class(id self, SEL _cmd) {
 }
 
 void easy_dealloc(id self, SEL _cmd) {
-    __easy_dealloc(self);
-}
-
-#pragma mark- Functions
-
-void __easy_dealloc(id self) {
-    NSLog(@"-- easy_dealloc %@", self);
-    NSMutableDictionary *tips = _globalTipsMap();
-    [tips removeAllObjects];
-    Class oldClass = [self class];
-    object_setClass(self, oldClass); /* 改回 isa 指针 */
+    __easy_dealloc_TipsMap(self);
     
-    /* 释放所有属性和变量 */
+    /* 释放所有属性和变量, 添加了dealloc方法为这里的实现,无法再去调用父类本来的dealloc方法 */
     unsigned int count = 0;
     Ivar * ivarList = class_copyIvarList([self class], &count);
     for (int i = 0; i < count; i++) {
@@ -156,11 +146,20 @@ void __easy_dealloc(id self) {
         [self setValue:nil forKey:KEY];
         //NSLog(@"prop %@ released", KEY);
     }
-    
+}
+
+#pragma mark- Functions
+
+void __easy_dealloc_TipsMap(id self) {
+    NSLog(@"-- easy_dealloc %@", self);
+    NSMutableDictionary *tips = _globalTipsMap();
+    [tips removeAllObjects];
+    Class oldClass = [self class];
+    object_setClass(self, oldClass); /* 改回 isa 指针 */
 }
 
 - (void)selEasyDealloc {
-    __easy_dealloc(self);
+    __easy_dealloc_TipsMap(self);
     [self selEasyDealloc];
 }
 
