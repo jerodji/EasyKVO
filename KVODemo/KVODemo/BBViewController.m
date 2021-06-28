@@ -63,17 +63,21 @@
         NSLog(@" > msg : 旧值 %@, 新值 %@", oldValue, newValue);
     }];
     
-    [self.person observeProperty:@"name" changedBlock:^(id newValue, id oldValue) {
-        NSLog(@" > person.name : 旧值 %@, 新值 %@", oldValue, newValue);
+    [self observeProperty:@"msg" changedBlock:^(id newValue, id oldValue) {
+        NSLog(@" >>> msg : 旧值 %@, 新值 %@", oldValue, newValue);
     }];
-
-    [self observeProperty:@"text" changedBlock:^(id newValue, id oldValue) {
-        NSLog(@" > text : 旧值 %@, 新值 %@", oldValue, newValue);
-    }];
-
-    [self.person observeProperty:@"nick" changedBlock:^(id newValue, id oldValue) {
-        NSLog(@" > person.nick : 旧值 %@, 新值 %@", oldValue, newValue);
-    }];
+    
+//    [self.person observeProperty:@"name" changedBlock:^(id newValue, id oldValue) {
+//        NSLog(@" > person.name : 旧值 %@, 新值 %@", oldValue, newValue);
+//    }];
+//
+//    [self observeProperty:@"text" changedBlock:^(id newValue, id oldValue) {
+//        NSLog(@" > text : 旧值 %@, 新值 %@", oldValue, newValue);
+//    }];
+//
+//    [self.person observeProperty:@"nick" changedBlock:^(id newValue, id oldValue) {
+//        NSLog(@" > person.nick : 旧值 %@, 新值 %@", oldValue, newValue);
+//    }];
     
 }
 

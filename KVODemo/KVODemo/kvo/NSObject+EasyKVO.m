@@ -8,8 +8,12 @@
 
 #import "NSObject+EasyKVO.h"
 #import <objc/message.h>
-//#import <os/lock.h>
 #import <pthread/pthread.h>
+
+@interface NSObject (EasyKVO)
+//@property (nonatomic, strong) NSMutableDictionary<> * globalTipsMap;
+@end
+
 
 @implementation NSObject (EasyKVO)
 
@@ -34,8 +38,11 @@ NSMutableArray *_globalObservedObjects(void);
 
 
 #pragma mark-
+- (void)observeProperty:(NSString*)keyPath changedBlock:(void(^)(id newValue, id oldValue))block {
+    [self observeProperty:keyPath changedBlock:block contextId:nil];
+}
 
-- (void)observeProperty:(NSString*)keyPath changedBlock:(void(^)(id newValue, id oldValue))block
+- (void)observeProperty:(NSString*)keyPath changedBlock:(void(^)(id newValue, id oldValue))block contextId:(NSString *)context
 {
     if (keyPath.length < 1) {
         return;
@@ -86,19 +93,29 @@ NSMutableArray *_globalObservedObjects(void);
     SEL setSel = NSSelectorFromString(_setterForProperty(keyPath));
     Method setMethod = class_getInstanceMethod([self class], setSel);
     const char * setType = method_getTypeEncoding(setMethod);
-    class_addMethod(pairClass, setSel, (IMP)easy_setter, setType);
+    class_addMethod(pairClass, setSel, (IMP)easy_setter, setType); // ???: 如果setter方法已经存在
     
     /* 修改 isa 指针指向 */
     object_setClass(self, pairClass);
     
-    /* 保存 block 信息, 用于执行回调 */
+    /* 保存 block 信息, 用于执行回调 */ /// ???: 如何区分回调的唯一ID
     NSString * KEY = [NSString stringWithFormat:@"_%@_%@_block", NSStringFromClass(pairClass), keyPath];
-    NSMutableDictionary *tips = _globalTipsMap();
-    if (block) {
-        [tips setObject:[block copy] forKey:KEY];
-    } else {
-        [tips setObject:[^{} copy] forKey:KEY];
+    NSMutableDictionary<NSString*, NSMutableArray*> *tips = _globalTipsMap();
+    NSMutableArray* VAL = (NSMutableArray*)[tips objectForKey:KEY];
+    if (!VAL) {
+        VAL = [NSMutableArray array];
     }
+    if (block){
+        [VAL addObject:[block copy]];
+    } else {
+        [VAL addObject:[^{} copy]];
+    }
+    [tips setObject:VAL forKey:KEY];
+//    if (block) {
+//        [tips setObject:[block copy] forKey:KEY];
+//    } else {
+//        [tips setObject:[^{} copy] forKey:KEY];
+//    }
     
     pthread_mutex_unlock(&lock);
 }
@@ -128,11 +145,20 @@ void easy_setter(id self, SEL _cmd, id newValue) {
     
     // 回调 block
     NSString *KEY = [NSString stringWithFormat:@"_%@_%@_block", NSStringFromClass(object_getClass(self)), keyPath];
-    NSMutableDictionary * tipMap = _globalTipsMap();
-    EasyKVOChangedBlock block = (EasyKVOChangedBlock)[tipMap objectForKey:KEY];
-    if (block) {
-        block(newValue, oldValue);
+    NSMutableDictionary<NSString*, NSMutableArray*> * tips = _globalTipsMap();
+    NSMutableArray* VAL = (NSMutableArray*)[tips objectForKey:KEY];
+    if (VAL) {
+        for (EasyKVOChangedBlock block in VAL) {
+            if (block) {
+                block(newValue, oldValue);
+            }
+        }
     }
+    
+//    EasyKVOChangedBlock block = (EasyKVOChangedBlock)[tips objectForKey:KEY];
+//    if (block) {
+//        block(newValue, oldValue);
+//    }
 }
 
 Class easy_class(id self, SEL _cmd) {
@@ -169,7 +195,7 @@ void __easy_dealloc_TipsMap(id self) {
     [self selEasyDealloc];
 }
 
-NSMutableDictionary *_globalTipsMap() {
+NSMutableDictionary<NSString*, NSMutableArray*> *_globalTipsMap() {
     NSMutableDictionary * _tipsDic = objc_getAssociatedObject(EASY_KVO_MAP, &EASY_KVO_MAP);
     if (!_tipsDic) {
         _tipsDic = [[NSMutableDictionary alloc] init];
