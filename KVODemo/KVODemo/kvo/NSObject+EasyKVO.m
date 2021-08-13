@@ -156,6 +156,19 @@ Class easy_class(id self, SEL _cmd) {
     return class_getSuperclass(object_getClass(self));
 }
 
+void __easy_dealloc_TipsMap(id self) {
+    NSLog(@"-- easy_dealloc %@", self);
+    NSMutableDictionary *tips = _globalTipsMap();
+    [tips removeAllObjects];
+    Class oldClass = [self class];
+    object_setClass(self, oldClass); /* 改回 isa 指针 */
+}
+
+- (void)selEasyDealloc {
+    __easy_dealloc_TipsMap(self);
+    [self selEasyDealloc];
+}
+
 void easy_dealloc(id self, SEL _cmd) {
     __easy_dealloc_TipsMap(self);
     
@@ -171,20 +184,7 @@ void easy_dealloc(id self, SEL _cmd) {
     }
 }
 
-#pragma mark- Functions
-
-void __easy_dealloc_TipsMap(id self) {
-    NSLog(@"-- easy_dealloc %@", self);
-    NSMutableDictionary *tips = _globalTipsMap();
-    [tips removeAllObjects];
-    Class oldClass = [self class];
-    object_setClass(self, oldClass); /* 改回 isa 指针 */
-}
-
-- (void)selEasyDealloc {
-    __easy_dealloc_TipsMap(self);
-    [self selEasyDealloc];
-}
+#pragma mark- 
 
 NSMutableDictionary<NSString*, NSMutableArray*> *_globalTipsMap() {
     NSMutableDictionary * _tipsDic = objc_getAssociatedObject(EASY_KVO_MAP, &EASY_KVO_MAP);
