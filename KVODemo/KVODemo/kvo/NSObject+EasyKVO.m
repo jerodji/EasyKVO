@@ -172,7 +172,8 @@ void __easy_dealloc_TipsMap(id self) {
 void easy_dealloc(id self, SEL _cmd) {
     __easy_dealloc_TipsMap(self);
     
-    /* 释放所有属性和变量, 添加了dealloc方法为这里的实现,无法再去调用父类本来的dealloc方法 */
+    /* 释放所有属性和变量, 添加了dealloc方法为这里的实现,无法再去调用父类本来的dealloc方法.
+     就算原本的实现中没有显示实现dealloc方法,释放时也是会隐式调用的,如果交换了imp,就意味着无法隐式调用了 */
     unsigned int count = 0;
     Ivar * ivarList = class_copyIvarList([self class], &count);
     for (int i = 0; i < count; i++) {
