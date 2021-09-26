@@ -8,7 +8,12 @@
 
 #import "NSObject+EasyKVO.h"
 #import <objc/message.h>
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#import <os/lock.h>
+#else
 #import <pthread/pthread.h>
+#endif
 
 @interface NSObject (EasyKVO)
 
@@ -54,9 +59,14 @@ NSMutableArray *_globalObservedObjects(void);
         return;
     }
     
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+    os_unfair_lock lock = OS_UNFAIR_LOCK_INIT;
+    os_unfair_lock_lock(&lock);
+#else
     pthread_mutex_t lock;
     pthread_mutex_init(&lock, NULL);
-        
+#endif
+    
     NSString *oldClassName = NSStringFromClass([self class]);
     NSString *pairClassName = [EASY_KVO_PREFIX stringByAppendingString:oldClassName];
     Class pairClass = NSClassFromString(pairClassName);
@@ -112,7 +122,12 @@ NSMutableArray *_globalObservedObjects(void);
     }
     [tips setObject:VAL forKey:KEY];
     
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+    os_unfair_lock_unlock(&lock);
+#else
     pthread_mutex_unlock(&lock);
+#endif
+    
 }
 
 
